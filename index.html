@@ -3,28 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BEDMAS Calculator</title>
+  <title>BEDMAS Grid Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #eef2f3; margin: 0; }
-    .calculator { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 320px; text-align: center; }
-    h2 { color: #333; margin-top: 0; }
-    input { width: 100%; height: 45px; font-size: 18px; margin-bottom: 15px; padding: 10px; box-sizing: border-box; border: 2px solid #ddd; border-radius: 6px; }
-    button { width: 100%; height: 45px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    button:hover { background: #0056b3; }
-    .result { margin-top: 20px; font-size: 20px; font-weight: bold; color: #28a745; word-wrap: break-word; }
-    p { font-size: 12px; color: #777; margin-bottom: 15px; }
+    /* Light Purple Background */
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100vh; 
+      background: #E8DFF5; /* Pastel light purple */
+      margin: 0; 
+    }
+    
+    .calculator { 
+      background: #FFFFFF; 
+      padding: 25px; 
+      border-radius: 16px; 
+      box-shadow: 0 10px 30px rgba(114, 91, 161, 0.2); 
+      width: 320px; 
+    }
+
+    /* Screen display styling */
+    .screen {
+      width: 100%;
+      height: 60px;
+      font-size: 24px;
+      text-align: right;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 2px solid #D2C4E8;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      background: #FAFAFD;
+      color: #4A3E65;
+    }
+
+    /* Grid Layout for Buttons */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    /* Base Button Design */
+    button {
+      height: 55px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    /* Color-Coded Button Varieties */
+    .num-btn {
+      background: #F3EEFB; /* Very soft purple-gray for numbers */
+      color: #4A3E65;
+    }
+    .num-btn:hover { background: #E7DCF7; }
+
+    .op-btn {
+      background: #B39DDB; /* Mid-tone purple for mathematical operators */
+      color: white;
+    }
+    .op-btn:hover { background: #9575CD; }
+
+    .clear-btn {
+      background: #FF8A80; /* Soft red for clearing/deleting */
+      color: white;
+    }
+    .clear-btn:hover { background: #E57373; }
+
+    .equal-btn {
+      background: #7E57C2; /* Deep purple for the compute button */
+      color: white;
+      grid-column: span 2; /* Makes the equals button double wide */
+    }
+    .equal-btn:hover { background: #673AB7; }
   </style>
 </head>
 <body>
 
   <div class="calculator">
-    <h2>BEDMAS Calculator</h2>
-    <p>Use <b>^</b> for Exponents (e.g., 2^3). Use brackets () for Brackets.</p>
-    <input type="text" id="expression" placeholder="e.g. 10 + (2 ^ 3) * 4" />
-    <button onclick="calculateBEDMAS()">Calculate</button>
-    <div class="result" id="output">Result: </div>
+    <!-- Single screen showing what you type/click and the result -->
+    <input type="text" id="screen" class="screen" placeholder="0" readonly />
+    
+    <div class="btn-grid">
+      <!-- Row 1: Clear and Bracket operations -->
+      <button class="clear-btn" onclick="clearScreen()">C</button>
+      <button class="clear-btn" onclick="deleteLast()">⌫</button>
+      <button class="op-btn" onclick="press('(')">(</button>
+      <button class="op-btn" onclick="press(')')">)</button>
+
+      <!-- Row 2: Exponent and Top Tier numbers -->
+      <button class="op-btn" onclick="press('^')">^</button>
+      <button class="num-btn" onclick="press('7')">7</button>
+      <button class="num-btn" onclick="press('8')">8</button>
+      <button class="num-btn" onclick="press('9')">9</button>
+
+      <!-- Row 3: Division and Middle Tier numbers -->
+      <button class="op-btn" onclick="press('/')">÷</button>
+      <button class="num-btn" onclick="press('4')">4</button>
+      <button class="num-btn" onclick="press('5')">5</button>
+      <button class="num-btn" onclick="press('6')">6</button>
+
+      <!-- Row 4: Multiplication and Bottom Tier numbers -->
+      <button class="op-btn" onclick="press('*')">×</button>
+      <button class="num-btn" onclick="press('1')">1</button>
+      <button class="num-btn" onclick="press('2')">2</button>
+      <button class="num-btn" onclick="press('3')">3</button>
+
+      <!-- Row 5: Add, Subtract, Decimal, Zero -->
+      <button class="op-btn" onclick="press('+')">+</button>
+      <button class="op-btn" onclick="press('-')">−</button>
+      <button class="num-btn" onclick="press('.')">.</button>
+      <button class="num-btn" onclick="press('0')">0</button>
+
+      <!-- Row 6: Equals fills the remaining space -->
+      <button class="equal-btn" onclick="calculateBEDMAS()">=</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
+
